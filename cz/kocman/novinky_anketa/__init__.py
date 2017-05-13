@@ -1,22 +1,25 @@
 import urllib
-from HTMLParser import HTMLParser
-from bs4 import BeautifulSoup
-from bs4 import Tag
+import json
 import re
+import os
+import time
+
+import novinky_tool
+
+baseDir = 'inquiries'
+if not os.path.exists(baseDir):
+    os.mkdir(baseDir)
+
+inquireId =  novinky_tool.get_last_inquire()
+inquire = novinky_tool.get_inquire(inquireId)
+# inquireDir = os.path.join(baseDir, str(inquireId))
+novinky_tool.add_or_create_inquire(inquire)
 
 
-def find_anktea(tag):
-    return tag.has_attr('id') \
-           and tag.has_attr('data-dot') \
-           and tag['id'] == 'inquiries' \
-           and tag['data-dot'] == 'hp_anketa'
 
-url_link = urllib.urlopen("http://www.novinky.cz")
-myfile = url_link.read()
-soup = BeautifulSoup(myfile, 'html.parser')
-prim_div = soup.find(find_anktea)
-div = prim_div.find('div')
-m = re.match(r'inquiry(\d+)',div['id'])
-if (not m):
-    raise Exception("div pro Anketu zmenil svuj format! (ocekava se inquiry\d+, ziskano " + div['id'] + ")")
-print(m.group(1))
+
+
+
+# cislo = '16515'
+
+
